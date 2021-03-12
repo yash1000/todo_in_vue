@@ -1,28 +1,56 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="todolistcontainer">
+    <div class="heading">
+        <h2 id="tital" >Todo List</h2>
+      <add-item  v-on:realoadList="getList()"/>
+    </div>
+    <ListView :items="items" v-on:realoadList="getList()"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AddItem from "@/components/AddItem";
+import ListView from "@/components/ListView";
+import axios from "axios";
+
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    AddItem,
+    ListView,
+  },
+  data:function () {
+    return{
+      items:[]
+    }
+  },
+  methods:{
+    getList() {
+      axios.get(`${process.env.VUE_APP_API_URL}items`).then((d) => {
+        this.items = d.data
+        console.log(d)
+      }).catch((d) => {
+        console.log(d)
+      })
+    },
+  },
+  created() {
+    this.getList()
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.todolistcontainer{
+  width: 350px;
+  margin: auto;
+}
+.heading{
+  background: #e6e6e6;
+  padding: 10px;
+}
+#tital{
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
